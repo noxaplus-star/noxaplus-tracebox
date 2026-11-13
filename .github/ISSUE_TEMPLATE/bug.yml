@@ -1,0 +1,61 @@
+name: Bug report
+description: Something captured wrong, streamed wrong, or refused to start.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Traffic bugs are easier to fix when we can see the shape of the request, not the secret inside it.
+        Please do not paste real tokens; run `tracebox export` and review the redacted file first.
+  - type: input
+    id: version
+    attributes:
+      label: TraceBox version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node version
+      placeholder: "22.14.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where does it happen?
+      options:
+        - Proxy / forwarding
+        - Dashboard UI
+        - Replay
+        - Diff
+        - Export / redaction
+        - CLI startup
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the exact `tracebox start` command and how the request was made.
+      placeholder: |
+        1. tracebox start --target http://localhost:3000
+        2. curl -X POST http://localhost:8787/api/x -d '...'
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead?
+      description: Status codes, dashboard behavior, error output, or a redacted export snippet.
+    validations:
+      required: true

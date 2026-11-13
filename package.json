@@ -1,0 +1,56 @@
+{
+  "name": "noxaplus-tracebox",
+  "version": "1.0.0",
+  "description": "See every request your app makes. A local HTTP capture proxy with replay, diff, and shareable redacted exports. No cloud, no account. Built by NoxaPlus.",
+  "keywords": [
+    "http",
+    "proxy",
+    "debugging",
+    "api",
+    "devtools",
+    "replay",
+    "http-diff",
+    "cli",
+    "developer-tools",
+    "noxaplus"
+  ],
+  "author": "NoxaPlus <NoxaPlus2025@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/noxaplus-star/noxaplus-tracebox",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noxaplus-star/noxaplus-tracebox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/noxaplus-star/noxaplus-tracebox/issues"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "tracebox": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "examples",
+    "docs/board.png",
+    "docs/diff.png",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "start": "node dist/cli.js start --target http://127.0.0.1:3000",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

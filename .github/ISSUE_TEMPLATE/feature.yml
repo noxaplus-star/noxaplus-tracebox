@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest a capture, inspection, or export capability.
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        TraceBox is intentionally small and local. Features that keep traffic on the developer's machine and stay within the configured memory bounds are the easiest yes.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to debug?
+      description: Describe the real situation, not just the missing button.
+      placeholder: "When a response is gzipped, I can't read it in the inspector..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would help?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you have tried
+      description: Other tools, flags, or workarounds.
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      options:
+        - label: This can work fully offline, with no cloud service or account.
+          required: true
+        - label: This can respect the configured memory and body limits.
+          required: true

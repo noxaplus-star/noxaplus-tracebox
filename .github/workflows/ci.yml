@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: CLI smoke test
+        run: |
+          node dist/cli.js --version
+          node dist/cli.js --help
+
+      - name: Proxy, API, and export smoke test
+        run: |
+          node examples/demo-server.mjs &
+          UPSTREAM=$!
+          node dist/cli.js start --target http://127.0.0.1:3100 --port 8787 --ui 4040 --quiet &
+          TRACEBOX=$!
+          trap 'kill $TRACEBOX $UPSTREAM 2>/dev/null || true' EXIT
+
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4040/api/health > /dev/null; then break; fi
+            sleep 0.25
+          done
+
+          curl -fsS http://127.0.0.1:8787/api/users/42 | grep -q 'Ada Lovelace'
+          curl -fsS -X POST http://127.0.0.1:8787/api/checkout \
+            -H 'content-type: application/json' \
+            -H 'authorization: Bearer sk-test-secret-value' \
+            -d '{"tier":"pro"}' > /dev/null
+
+          node dist/cli.js export --url http://127.0.0.1:4040 --out trace.json
+
+          node -e "
+            const fs = require('node:fs');
+            const dump = fs.readFileSync('trace.json', 'utf8');
+            const data = JSON.parse(dump);
+            if (data.redacted !== true) throw new Error('export is not marked redacted');
+            if (!Array.isArray(data.exchanges) || data.exchanges.length < 2) throw new Error('expected at least two exchanges');
+            if (dump.includes('sk-test-secret-value')) throw new Error('authorization value leaked into export');
+            if (!dump.includes('[redacted]')) throw new Error('no redaction marker found');
+            console.log('export ok:', data.exchanges.length, 'exchanges,', data.redactionCount, 'redactions');
+          "
+
+      - name: Pack
+        run: npm pack --dry-run
