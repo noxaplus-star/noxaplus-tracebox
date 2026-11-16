@@ -2,6 +2,12 @@
 
 All notable changes to NoxaPlus TraceBox are documented here. This project follows [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] — 2026-11-16
+
+### Changed
+
+- The live dashboard header and favicon now use the original NoxaPlus emblem and brand tile.
+
 ## [1.0.0] — 2026-11-13
 
 First release.

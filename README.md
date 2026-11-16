@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/brand.png" alt="NoxaPlus" width="520"></p>
+
 # NoxaPlus TraceBox
 
 **Your app swears it sent the header. The API swears it never arrived. TraceBox is the version of events that both of them have to agree on.**
